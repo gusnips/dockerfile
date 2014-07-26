@@ -1,26 +1,28 @@
-## ElasticSearch Dockerfile
+## ElasticSearch + MongoDB River Plugin Dockerfile
 
 
-This repository contains **Dockerfile** of [ElasticSearch](http://www.elasticsearch.org/) for [Docker](https://www.docker.io/)'s [trusted build](https://index.docker.io/u/dockerfile/elasticsearch/) published to the public [Docker Registry](https://index.docker.io/).
+This repository contains **Dockerfile** of [ElasticSearch](http://www.elasticsearch.org/) installed with [MongoDB River Plugin](https://github.com/richardwilly98/elasticsearch-river-mongodb)
 
 
 ### Dependencies
 
-* [dockerfile/java](http://dockerfile.github.io/#/java)
+* [Docker](https://www.docker.io/)
 
 
 ### Installation
 
-1. Install [Docker](https://www.docker.io/).
+Download [the image build](https://index.docker.io/u/gusnips/elasticsearch-river-mongodb/) from public [Docker Registry](https://index.docker.io/):  
+`docker pull gusnips/elasticsearch-river-mongodb`
 
-2. Download [trusted build](https://index.docker.io/u/dockerfile/elasticsearch/) from public [Docker Registry](https://index.docker.io/): `docker pull dockerfile/elasticsearch`
-
-   (alternatively, you can build an image from Dockerfile: `docker build -t="dockerfile/elasticsearch" github.com/dockerfile/elasticsearch`)
+alternatively, you can build an image from Dockerfile:  
+`docker build -t="gusnips/elasticsearch-river-mongodb" github.com/gusnips/dockerfile/elasticsearch-river-mongodb`
 
 
 ### Usage
 
-    docker run -d -p 9200:9200 -p 9300:9300 dockerfile/elasticsearch
+   ```sh
+    docker run -d -p 9200:9200 -p 9300:9300 gusnips/elasticsearch-river-mongodb
+   ```
 
 #### Attach persistent/shared directories
 
@@ -41,3 +43,9 @@ This repository contains **Dockerfile** of [ElasticSearch](http://www.elasticsea
     ```
 
 After few seconds, open `http://localhost:9200` to see the result.
+
+## Versions
+
++ [ElasticSearch](http://www.elasticsearch.org/) 1.0.0
++ [MongoDB River Plugin](https://github.com/richardwilly98/elasticsearch-river-mongodb) 2.0.0
++ [Mapper Attachments Type for Elasticsearch](https://github.com/elasticsearch/elasticsearch-mapper-attachments) (MongoDB River Plugin dependency) 2.0.0
