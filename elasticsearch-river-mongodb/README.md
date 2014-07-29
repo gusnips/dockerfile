@@ -6,9 +6,13 @@ This repository contains **Dockerfile** of [ElasticSearch](http://www.elasticsea
 
 ### Dependencies
 
-* [Docker](https://www.docker.io/)
+* [Docker](https://www.docker.io/) [Not using yet?](https://docs.docker.com/installation/#installation)
 
+It's usually useful to have mongodb running. If you don't have it yet, try the [official version](https://index.docker.io/u/dockerfile/mongodb/)
 
+```sh
+docker run -d -p 27017:27017 --name mongodb dockerfile/mongodb
+```
 ### Installation
 
 Download [the image build](https://index.docker.io/u/gusnips/elasticsearch-river-mongodb/) from public [Docker Registry](https://index.docker.io/):  
@@ -21,7 +25,7 @@ alternatively, you can build an image from Dockerfile:
 ### Usage
 
    ```sh
-    docker run -d -p 9200:9200 -p 9300:9300 gusnips/elasticsearch-river-mongodb
+    docker run -d -p 9200:9200 -p 9300:9300 --name elasticsearch gusnips/elasticsearch-river-mongodb
    ```
 
 #### Attach persistent/shared directories
@@ -39,7 +43,7 @@ alternatively, you can build an image from Dockerfile:
   3. Start a container by mounting data directory and specifying the custom configuration file:
 
     ```sh
-    docker run -d -p 127.0.0.1:9200:9200 -p 127.0.0.1:9300:9300 -v <data-dir>:/data gusnips/elasticsearch-river-mongodb /elasticsearch/bin/elasticsearch -Des.config=/data/elasticsearch.yml
+    docker run -d -p 127.0.0.1:9200:9200 -p 127.0.0.1:9300:9300  --name elasticsearch -v <data-dir>:/data gusnips/elasticsearch-river-mongodb /elasticsearch/bin/elasticsearch -Des.config=/data/elasticsearch.yml
     ```
 
 After few seconds, open `http://localhost:9200` to see the result.
