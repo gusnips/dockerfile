@@ -1,11 +1,16 @@
 #
-# ElasticSearch Dockerfile
+# ElasticSearch + MongoDB integration Dockerfile
 #
 # https://github.com/gusnips/dockerfile/elasticsearch-river-mongodb
+#
+# see also: 
+# https://github.com/richardwilly98/elasticsearch-river-mongodb/
 #
 
 # Pull base image.
 FROM dockerfile/java
+
+MAINTAINER Gustavo Salome <gustavonips@gmail.com>
 
 # Install ElasticSearch.
 RUN \
@@ -17,9 +22,8 @@ RUN \
 
 # Install Plugins.
 RUN \
-  /elasticsearch/bin/plugin --install elasticsearch/elasticsearch-mapper-attachments/2.0.0 --verbose && \
-  /elasticsearch/bin/plugin --install com.github.richardwilly98.elasticsearch/elasticsearch-river-mongodb/2.0.0 --verbose && \
-  /elasticsearch/bin/elasticsearch restart
+  /elasticsearch/bin/plugin --install elasticsearch/elasticsearch-mapper-attachments/2.0.0 && \
+  /elasticsearch/bin/plugin --install com.github.richardwilly98.elasticsearch/elasticsearch-river-mongodb/2.0.0
 
 # Define mountable directories.
 VOLUME ["/data"]
