@@ -40,3 +40,8 @@ Now access [http://localhost](http://localhost) and be happy!
 
 You could replace $(pwd) with your apache entry folder, like `~/htdocs` or something  
 
+Adding sites and config: 
+```sh
+docker run -p 80 -v $(pwd):/var/www -v $(pwd)/sites:/etc/apache2/sites-enabled -v $(pwd)/conf:/etc/apache2/conf-enabled gusnips/apache2-php5-fastcgi
+```
+
