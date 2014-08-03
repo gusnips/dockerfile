@@ -3,40 +3,42 @@ FROM    ubuntu:12.04
 
 MAINTAINER Gustavo Salomé <gustavonips@gmail.com>
 
-# Expose apache and ssh
-EXPOSE 22 80
-
-#
-WORKDIR /var/www
-
-# Share the volume at correct location
-VOLUME /var/www
-
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-
 # Basic setup
 RUN \
     apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y sudo apt-utils python-software-properties && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -q python-software-properties && \
     apt-add-repository -y ppa:ondrej/apache2 && \
     add-apt-repository -y ppa:ondrej/php5 && \
     apt-get update
 
 RUN \
-    apt-get install -y openssh-server memcached curl supervisor && \
-    apt-get install -y apache2-mpm-worker libapache2-mod-fastcgi && \
-    apt-get install -y php5-common php5-fpm && \
-    apt-get install -y php5-apcu php5-gd php5-mcrypt php5-mysqlnd php5-curl php5-memcache php5-json
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -q memcached curl && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -q apache2-mpm-worker libapache2-mod-fastcgi && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -q php5-common php5-fpm && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -q php5-apcu php5-gd php5-mcrypt php5-mysqlnd php5-curl php5-memcache php5-json
 
-RUN mkdir -p /var/run/sshd
-RUN mkdir -p /var/log/supervisor
+# Enable apache default configuration
+RUN echo "ServerName localhost" | tee /etc/apache2/conf-available/servername.conf
+RUN a2enconf servername
 
-# Conf files
+# Enable apache modules
 ADD fastcgi.conf /etc/apache2/mods-enabled/fastcgi.conf
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 RUN a2enmod rewrite actions fastcgi alias
 
-#Setup the server
-CMD ["/usr/bin/supervisord"]
+#Env vars
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+
+RUN chown -R www-data:www-data /var/www
+
+#
+EXPOSE 80
+
+WORKDIR /var/www
+
+VOLUME ["/var/www","/etc/apache2/sites-enabled","/etc/apache2/conf-enabled"]
+
+# Start the servers
+CMD ["/usr/sbin/apachectl start && php-fpm -D"]
